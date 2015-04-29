@@ -11,6 +11,9 @@
 # COMMAND-LINE FOR SERVICE (EXAMPLE)
 # $USER1$/check_disk.sh!$USER1$!$HOSTNAME$!75!90
 #
+# Output example
+# [eddimas@centos7 ~]$ ./check_disk.sh -l eddimas -H 192.168.1.74 -w 75 -c 90
+# OK. DISK STATS: / 14% of 33G, /dev 0% of 956M, /dev/shm 1% of 966M, /run 1% of 966M, /sys/fs/cgroup 0% of 966M, /boot 34% of 521M,
 ##########################################################
 
 I=0
