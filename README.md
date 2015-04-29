@@ -1,5 +1,4 @@
 # nagios-plugins
-****
 [ ![License] [license-image] ] [license]
 
 This repository contains various scripts than I wrote for [Nagios Core].
@@ -19,7 +18,6 @@ The reason for this project is *"based on my experienced"* how **improve** the w
 4. **Pharse and display** the results.
 
 ## Installation
-****
 
 **You need** 
 * **Clone and copy** the scripts to your nagios libexec folder:
@@ -72,7 +70,6 @@ nagios$ vi /usr/local/nagios/etc/objects/services.cfg
  - Add Night Mode
 
 ## Contributing
-***
 
 If you would like help implementing a new tracker or adding any additional enrichment please feel free to do it! just:
 
