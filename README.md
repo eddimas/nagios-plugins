@@ -37,11 +37,11 @@ Your **Nagios instance** needs:
  ```bash
 nagios$ vi /usr/local/nagios/etc/objects/hosts.cfg
     define host{
-        use         generic-host		; Inherit default values from a template
-	    host_name   remotehost          ; The name we're giving to this host
-	    alias		Some Remote Host	; A longer name associated with the host
+      use         generic-host	 	; Inherit default values from a template
+	    host_name   remotehost      ; The name we're giving to this host
+	    alias		Some Remote Host	  ; A longer name associated with the host
 	    address     192.168.1.50		; IP address of the host
-	    hostgroups  allhosts            ; Host groups this host is associated with
+	    hostgroups  allhosts        ; Host groups this host is associated with
 	}
 ```
 
@@ -50,13 +50,13 @@ nagios$ vi /usr/local/nagios/etc/objects/hosts.cfg
 ``` bash
 nagios$ vi /usr/local/nagios/etc/objects/commands.cfg
     define command{
-        name		    check_disk
+        name		      check_disk
         command_name	check_disk
         command_line	$USER1$/check_disk.sh -l username -I $HOSTADDRESS$ -w $ARG1$ -c $ARG2$
     }
 ```
 
-4. Create the new service:
+3. Create the new service:
 
 ``` bash
 nagios$ vi /usr/local/nagios/etc/objects/services.cfg
