@@ -33,6 +33,7 @@ The **remote client** needs:
 Your **Nagios instance** needs:
 
 1. Set-up your remote host:
+
  ```bash
 nagios$ vi /usr/local/nagios/etc/objects/hosts.cfg
     define host{
@@ -44,6 +45,7 @@ nagios$ vi /usr/local/nagios/etc/objects/hosts.cfg
 	}
 ```
 2. Add the new command:
+
 ``` bash
 nagios$ vi /usr/local/nagios/etc/objects/commands.cfg
     define command{
@@ -53,6 +55,7 @@ nagios$ vi /usr/local/nagios/etc/objects/commands.cfg
     }
 ```
 4. Create the new service:
+
 ``` bash
 nagios$ vi /usr/local/nagios/etc/objects/services.cfg
     define service{
