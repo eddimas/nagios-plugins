@@ -28,11 +28,11 @@ The reason for this project is *"based on my experienced"* how **improve** the w
 		host$ cp ./* /usr/local/nagios/libexec/
 	```
 
-+ The **remote client** needs:
+2. The **remote client** needs:
 
 	*Obviously* an **efective user with ssh login grant** and preferably set-up the `ssh_keys` interchange *([perform ssh login without password])*. 
 
-+ Your **Nagios instance** needs:
+3. Your **Nagios instance** needs:
 
 	 Set-up your remote host:
 	```bash
