@@ -44,6 +44,7 @@ nagios$ vi /usr/local/nagios/etc/objects/hosts.cfg
 	    hostgroups  allhosts            ; Host groups this host is associated with
 	}
 ```
+
 2. Add the new command:
 
 ``` bash
@@ -54,6 +55,7 @@ nagios$ vi /usr/local/nagios/etc/objects/commands.cfg
         command_line	$USER1$/check_disk.sh -l username -I $HOSTADDRESS$ -w $ARG1$ -c $ARG2$
     }
 ```
+
 4. Create the new service:
 
 ``` bash
