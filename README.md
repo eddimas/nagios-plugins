@@ -31,6 +31,7 @@ The **remote client** needs:
 * *Obviously* an **efective user with ssh login grant** and preferably set-up the `ssh_keys` interchange *([perform ssh login without password])*. 
 
 Your **Nagios instance** needs:
+
 1. Set-up your remote host:
  ```bash
 nagios$ vi /usr/local/nagios/etc/objects/hosts.cfg
