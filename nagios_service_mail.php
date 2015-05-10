@@ -2,7 +2,7 @@
 
 <?php
 
-/*  Copyright (C) 2015 Eduardo Dimas <eddimas@gmail.com>
+/*  Copyright (C) 2015 Eduardo Dimas (https://github.com/eddimas/nagios-plugins)
     Copyright (C) 2011 shawnbrito@gmail.com 
       http://exchange.nagios.org/directory/Plugins/Others/Send-HTML-Alert-Email/details
 

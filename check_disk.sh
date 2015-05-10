@@ -3,8 +3,7 @@
 #
 # Plugin To Check Free Disk Space
 # Using Ssh_login
-# Copyright (C) 2015 Eduardo Dimas <eddimas@gmail.com>
-#
+# Copyright (C) 2015 Eduardo Dimas (https://github.com/eddimas/nagios-plugins)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
