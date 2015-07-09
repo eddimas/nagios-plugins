@@ -107,12 +107,12 @@ rm $TEMP_FILE.tmp $TEMP_FILE
 
 ## According with the number of FS determine if the traceholds are reached (one by one)
 for (( i=1; i<=$EQP_FS; i++ )); do
-        if [ "${PERCENT[$i]}" -lt "$WARN" ]; then
+        if [ "${PERCENT[$i]}" -lt "${WARN}" ]; then
                 ok=$((ok+1))
-        elif [ "${PERCENT[$i]}" -eq "$WARN" -o "${PERCENT[$i]}" -gt "$WARN" -a "${PERCENT[$i]}" -lt "$CRIT" ]; then
+        elif [ "${PERCENT[$i]}" -eq "${WARN}" -o "${PERCENT[$i]}" -gt "${WARN}" -a "${PERCENT[$i]}" -lt "${CRIT}" ]; then
                 warn=$((warn+1))
                 WARN_DISKS[$warn]="${FSNAME[$i]} has ${PERCENT[$i]}% of utilization or ${USED[$i]} of ${FULL[$i]},"                
-        elif [ "${PERCENT[$i]}" -eq "$CRIT" -o "${PERCENT[$i]}" -gt "$CRIT" ]; then
+        elif [ "${PERCENT[$i]}" -eq "${CRIT}" -o "${PERCENT[$i]}" -gt "${CRIT}" ]; then
                 crit=$((crit+1))
                 CRIT_DISKS[$crit]="${FSNAME[$i]} has ${PERCENT[$i]}% of utilization or ${USED[$i]} of ${FULL[$i]},"                
         fi
@@ -121,6 +121,7 @@ done
 ## Set the data to show in the nagios service status 
 for (( i=1; i<=$EQP_FS; i++ )); do
         DATA[$i]="${FSNAME[$i]} ${PERCENT[$i]}% of ${FULL[$i]},"
+        perf[$i]="${FSNAME[$i]}=${PERCENT[$i]}%"
 done
 
 ## Just validate and adjust the nagios output   
@@ -128,15 +129,15 @@ if [ "$ok" -eq "$EQP_FS" -a "$warn" -eq 0 -a "$crit" -eq 0 ]; then
     echo "OK. DISK STATS: ${DATA[@]}"
     exit 0
   elif [ "$warn" -gt 0 -a "$crit" -eq 0 ]; then
-    echo "WARNING. DISK STATS: ${DATA[@]}; Warning ${WARN_DISKS[@]}"
+    echo "WARNING. DISK STATS: ${DATA[@]}; Warning ${WARN_DISKS[@]}| ${perf[@]};${WARN};${CRIT};0;;"
     exit 1
   elif [ "$crit" -gt 0 ]; then
       #Validate if the Warning array is empty if so remove the Warning leyend
       if [ ${#WARN_DISKS[@]} -eq 0 ]; then 
-          echo "CRITICAL. DISK STATS: ${DATA[@]}; Critical ${CRIT_DISKS[@]}"
+          echo "CRITICAL. DISK STATS: ${DATA[@]}; Critical ${CRIT_DISKS[@]}| ${perf[@]};${WARN};${CRIT};0;;"
           exit 2
       else
-          echo "CRITICAL. DISK STATS: ${DATA[@]}; Warning ${WARN_DISKS[@]}; Critical ${CRIT_DISKS[@]}"
+          echo "CRITICAL. DISK STATS: ${DATA[@]}; Warning ${WARN_DISKS[@]}; Critical ${CRIT_DISKS[@]}| ${perf[@]};${WARN};${CRIT};0;;"
           exit 2
       fi
 else
