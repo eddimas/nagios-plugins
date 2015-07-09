@@ -121,7 +121,7 @@ done
 ## Set the data to show in the nagios service status 
 for (( i=1; i<=$EQP_FS; i++ )); do
         DATA[$i]="${FSNAME[$i]} ${PERCENT[$i]}% of ${FULL[$i]},"
-        perf[$i]="${FSNAME[$i]}=${PERCENT[$i]}%"
+        perf[$i]="${FSNAME[$i]}=${PERCENT[$i]}%;${WARN};${CRIT};0;;"
 done
 
 ## Just validate and adjust the nagios output   
@@ -129,15 +129,15 @@ if [ "$ok" -eq "$EQP_FS" -a "$warn" -eq 0 -a "$crit" -eq 0 ]; then
     echo "OK. DISK STATS: ${DATA[@]}"
     exit 0
   elif [ "$warn" -gt 0 -a "$crit" -eq 0 ]; then
-    echo "WARNING. DISK STATS: ${DATA[@]}; Warning ${WARN_DISKS[@]}| ${perf[@]};${WARN};${CRIT};0;;"
+    echo "WARNING. DISK STATS: ${DATA[@]}_ Warning ${WARN_DISKS[@]}| ${perf[@]}"
     exit 1
   elif [ "$crit" -gt 0 ]; then
       #Validate if the Warning array is empty if so remove the Warning leyend
       if [ ${#WARN_DISKS[@]} -eq 0 ]; then 
-          echo "CRITICAL. DISK STATS: ${DATA[@]}; Critical ${CRIT_DISKS[@]}| ${perf[@]};${WARN};${CRIT};0;;"
+          echo "CRITICAL. DISK STATS: ${DATA[@]}_ Critical ${CRIT_DISKS[@]}| ${perf[@]}"
           exit 2
       else
-          echo "CRITICAL. DISK STATS: ${DATA[@]}; Warning ${WARN_DISKS[@]}; Critical ${CRIT_DISKS[@]}| ${perf[@]};${WARN};${CRIT};0;;"
+          echo "CRITICAL. DISK STATS: ${DATA[@]}_ Warning ${WARN_DISKS[@]}_ Critical ${CRIT_DISKS[@]}| ${perf[@]}"
           exit 2
       fi
 else
