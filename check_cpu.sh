@@ -37,7 +37,7 @@ ST_UK=3
 interval=5
 
 print_version() {
-  echo "$VERSION $AUTHOR"
+  printf "%s %s\n" "$VERSION" "$AUTHOR"
 }
 
 help() {
@@ -50,13 +50,12 @@ Usage :
         -h              Help
         -l [STRING]     Remote user
         -H [STRING]     Host name
-        -i [VALUE]      Defines the pause between the two times /proc/stat is being
-                        parsed. Higher values could lead to more accurate result.
-                          Default is: 1 second
+        -i [VALUE]      Defines the period where the statistic data will be collected.
+                          Default is: 5 samples, one sample by second
         -w [VALUE]      Sets a warning level for CPU user.
-                          Default is: off
+                          Default is: on
         -c [VALUE]      Sets a critical level for CPU user.
-                          Default is: off
+                          Default is: on
 
         ----------------------------------
 Note : [VALUE] must be an integer.
@@ -138,7 +137,7 @@ do_output() {
 }
 
 do_perfdata() {
-  perfdata="cpu_user=${cpu_user}%;80;90; cpu_sys=${cpu_sys}%;80;90; iowait=${cpu_iowait}%;80;90;"
+  perfdata="cpu_user=${cpu_user}%;${warn};${crit}; cpu_sys=${cpu_sys}%;${warn};${crit}; iowait=${cpu_iowait}%;${warn};${crit};"
 }
 
 if [ -n "$warn" -a -n "$crit" ]
@@ -146,30 +145,29 @@ then
   val_wcdiff
   if [ "$wcdiff" = 1 ]
   then
-    echo "Please adjust your warning/critical thresholds. The warning must be lower than the critical level!"
-    exit $ST_UK
+    printf "Please adjust your warning/critical thresholds. The warning must be lower than the critical level!"
+    exit ${ST_UK}
   fi
 fi
 
 get_cpuvals ${interval}
-do_output
-do_perfdata
+do_output; do_perfdata
 
 if [ -n "$warn" -a -n "$crit" ]
 then
   if [ "$cpu_usage" -ge "$warn" -a "$cpu_usage" -lt "$crit" ]
   then
-    echo "WARNING - ${output} | ${perfdata}"
-    exit $ST_WR
+    printf "WARNING - %s | %s\n" "${output}" "${perfdata}"
+    exit ${ST_WR}
 elif [ "$cpu_usage" -ge "$crit" ]
   then
-    echo "CRITICAL - ${output} | ${perfdata}"
-    exit $ST_CR
+    printf "CRITICAL - %s | %s\n" "${output}" "${perfdata}"
+    exit ${ST_CR}
   else
-    echo "OK - ${output} | ${perfdata}"
-    exit $ST_OK
+    printf "OK - %s | %s\n" "${output}" "${perfdata}"
+    exit ${ST_OK}
   fi
 else
-  echo "OK - ${output} | ${perfdata}"
-  exit $ST_OK
+  printf "OK - %s | %s\n" "${output}" "${perfdata}"
+  exit ${ST_OK}
 fi
