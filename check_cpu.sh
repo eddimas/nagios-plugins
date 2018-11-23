@@ -50,8 +50,9 @@ Usage :
         -h              Help
         -l [STRING]     Remote user
         -H [STRING]     Host name
-        -i [VALUE]      Defines the period where the statistics are being colected.
-                          Default is: 5 samples each second
+        -i [VALUE]      Defines the pause between the two times /proc/stat is being
+                        parsed. Higher values could lead to more accurate result.
+                          Default is: 1 second
         -w [VALUE]      Sets a warning level for CPU user.
                           Default is: off
         -c [VALUE]      Sets a critical level for CPU user.
@@ -104,10 +105,7 @@ get_cpuvals() {
     cpu_irq+=( ${TEMP_VAR[5]} );
     cpu_softirq+=( ${TEMP_VAR[6]} );
     cpu_total+=( $(expr ${cpu_user} + ${cpu_nice} + ${cpu_sys} + ${cpu_idle} + ${cpu_iowait} + ${cpu_irq} + ${cpu_softirq}) );
-    sleep 1
-  done;
 
-  for ((x=0;x<=${nTimes};x++)); do
     avg_cpu_user=$( expr $avg_cpu_user + ${cpu_user[$x]} ) ;
     avg_cpu_nice=$( expr $avg_cpu_nice + ${cpu_nice[$x]} ) ;
     avg_cpu_sys=$( expr $avg_cpu_sys + ${cpu_sys[$x]} ) ;
@@ -116,17 +114,9 @@ get_cpuvals() {
     avg_cpu_irq=$( expr $avg_cpu_irq + ${cpu_irq[$x]} ) ;
     avg_cpu_softirq=$( expr $avg_cpu_softirq + ${cpu_softirq[x]} ) ;
     avg_cpu_total=$( expr $avg_cpu_total + ${cpu_total[$x]} ) ;
-  done
 
-  #               T0	   T1	     T2      T3	     T4	     Avg (5 sec)	Percentage
-  #cpu_user     555402	555419	555439	555456	555473	555437.8	 5.84371764093243
-  #cpu_nice     14964	  14964	  14964	  14964	  14964	  14964	     0.157435073340188
-  #cpu_sys      181464	181476	181484	181496	181506	181485.2	 1.90939159129636
-  #cpu_idle     8618807	8618886	8618965	8619040	8619118	8618963.2	 90.6794375506806
-  #cpu_iowait   88994   88995	  88995	  88995	  88995	  88994.8	   0.936307328581622
-  #cpu_irq      28725   28726	  28726	  28727	  28728	  28726.4	   0.30222820708364
-  #cpu_softirq	16298   16298	  16299	  16300	  16301	  16299.2	   0.171482608085164
-  #cpu_total	 9504654	9504764	9504872	9504978	9505085	9504870.6	 100
+    sleep 1
+  done;
 
   cpu_user=$(echo "scale=2; (1000*(${avg_cpu_user}/${nTimes})/(${avg_cpu_total}/${nTimes}))/10"       | bc -l | sed 's/^\./0./');
   cpu_nice=$(echo "scale=2; (1000*(${avg_cpu_nice}/${nTimes})/(${avg_cpu_total}/${nTimes}))/10"       | bc -l | sed 's/^\./0./');
