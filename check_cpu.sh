@@ -50,9 +50,8 @@ Usage :
         -h              Help
         -l [STRING]     Remote user
         -H [STRING]     Host name
-        -i [VALUE]      Defines the pause between the two times /proc/stat is being
-                        parsed. Higher values could lead to more accurate result.
-                          Default is: 1 second
+        -i [VALUE]      Defines the period where the statistics are being colected.
+                          Default is: 5 samples each second
         -w [VALUE]      Sets a warning level for CPU user.
                           Default is: off
         -c [VALUE]      Sets a critical level for CPU user.
