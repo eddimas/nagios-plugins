@@ -127,10 +127,10 @@ for (( i=1; i<=$EQP_FS; i++ )); do
     ok=$((ok+1))
   elif [ "${PERCENT[$i]}" -eq "${WARN}" -o "${PERCENT[$i]}" -gt "${WARN}" -a "${PERCENT[$i]}" -lt "${CRIT}" ]; then
     warn=$((warn+1))
-    WARN_DISKS[$warn]="${FSNAME[$i]} has ${PERCENT[$i]}% of utilization or ${USED[$i]} of ${FULL[$i]},"
+    WARN_DISKS[$warn]="${FSNAME[$i]} ${PERCENT[$i]}% (${USED[$i]}) of ${FULL[$i]} used,"
   elif [ "${PERCENT[$i]}" -eq "${CRIT}" -o "${PERCENT[$i]}" -gt "${CRIT}" ]; then
     crit=$((crit+1))
-    CRIT_DISKS[$crit]="${FSNAME[$i]} has ${PERCENT[$i]}% of utilization or ${USED[$i]} of ${FULL[$i]},"
+    CRIT_DISKS[$crit]="${FSNAME[$i]} ${PERCENT[$i]}% (${USED[$i]}) of ${FULL[$i]} used,"
   fi
 done
 
@@ -142,15 +142,15 @@ done
 
 ## Just validate and adjust the nagios output
 if [ "$ok" -eq "$EQP_FS" -a "$warn" -eq 0 -a "$crit" -eq 0 ]; then
-  echo "OK. DISK STATS: ${DATA[@]}"
+  echo "OK: ${DATA[@]}"
   exit 0
 elif [ "$warn" -gt 0 -a "$crit" -eq 0 ]; then
-  echo "WARNING. DISK STATS: ${DATA[@]}_ Warning ${WARN_DISKS[@]}| ${perf[@]}"
+  echo "WARNING: ${WARN_DISKS[@]}| ${perf[@]}"
   exit 1
 elif [ "$crit" -gt 0 ]; then
   #Validate if the Warning array is empty if so remove the Warning leyend
   if [ ${#WARN_DISKS[@]} -eq 0 ]; then
-    echo "CRITICAL. DISK STATS: ${DATA[@]}_ Critical ${CRIT_DISKS[@]}| ${perf[@]}"
+    echo "CRITICAL: Critical ${CRIT_DISKS[@]}| ${perf[@]}"
     exit 2
   else
     echo "CRITICAL. DISK STATS: ${DATA[@]}_ Warning ${WARN_DISKS[@]}_ Critical ${CRIT_DISKS[@]}| ${perf[@]}"
