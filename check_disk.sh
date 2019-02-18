@@ -40,7 +40,6 @@
 # CRITICAL. DISK STATS: / 14% of 33G, /dev 0% of 956M, /dev/shm 1% of 966M, /run 1% of 966M, /sys/fs/cgroup 0% of 966M, /boot 34% of 521M,; Warning / has 14% of utilization or 4.3G of 33G,; Critical /boot has 34% of utilization or 175M of 521M,
 #
 ##########################################################
-
 j=0; ok=0
 warn=0; crit=0
 COMMAND="/bin/df -PH"
@@ -50,7 +49,7 @@ TEMP_FILE="/var/tmp/df.$RANDOM"
 help() {
   cat << END
 Usage :
-        check_disk.sh -l [STRING] -H [STRING] -w [VALUE] -c [VALUE]
+        check_disk.sh -l [STRING] -H [STRING] -w [VALUE] -c [VALUE] [-i PrivKey] [-d 'regex_pattern']
 
         OPTION          DESCRIPTION
         ----------------------------------
@@ -59,34 +58,45 @@ Usage :
         -H [STRING]     Host name
         -w [VALUE]      Warning Threshold
         -c [VALUE]      Critical Threshold
+        -i [STRING]     Path to the private SSH Key (optional)
+        -d [STRING]     Whitelist regex string for filesystems and mountpoints (optional, default: all)
 
         ----------------------------------
 Note : [VALUE] must be an integer.
 END
 }
 
-## Validating and setting the variables and the input args
-if [ $# -ne 8 ]
-then
-  help;
-  exit 3;
-fi
-
-while getopts "l:H:n:w:c:" OPT
+while getopts "l:H:n:w:c:i:d:" OPT
 do
   case $OPT in
     l) USERNAME="$OPTARG" ;;
     H) HOSTNAME="$OPTARG" ;;
     w) WARN="$OPTARG" ;;
     c) CRIT="$OPTARG" ;;
+    i) KEY="$OPTARG" ;;
+    d) DISKPATTERN="$OPTARG" ;;
     *) help ;;
   esac
 done
 
+if [ ! -z "$KEY" ]; then
+    if [ -r "$KEY" ]; then
+        KEY="-i $KEY"
+    else
+        echo "ERROR: Key $KEY is not readable."
+        exit 3
+    fi
+fi
+
 get_data () {
   ## Sending the ssh request command and store the result into local log file
-  ssh -l ${USERNAME} ${HOSTNAME} -C ${COMMAND} > ${TEMP_FILE}.tmp
-  cat ${TEMP_FILE}.tmp | grep -v Used | grep -v '0 0 0'|grep -ve '- - -' > ${TEMP_FILE}
+  ssh -l ${USERNAME} ${KEY} ${HOSTNAME} -C ${COMMAND} > ${TEMP_FILE}.tmp
+  if [ ! -z "$DISKPATTERN" ]; then
+    cat ${TEMP_FILE}.tmp | grep -E $DISKPATTERN | grep -v Used | grep -v '0 0 0'|grep -ve '- - -' > ${TEMP_FILE}
+  else
+    cat ${TEMP_FILE}.tmp | grep -v Used | grep -v '0 0 0'|grep -ve '- - -' > ${TEMP_FILE}
+  fi
+
   EQP_FS=$(cat ${TEMP_FILE} | grep -v Used |grep -v '0 0 0'|grep -ve '- - -' | wc -l)  # determine how many FS are in the server
 }
 
