@@ -43,7 +43,7 @@
 
 j=0; ok=0
 warn=0; crit=0
-COMMAND="/bin/df -PH"
+COMMAND="/bin/df -PHl -x tmpfs -x devtmpfs"
 TEMP_FILE="/var/tmp/df.$RANDOM"
 
 ## Help funcion
@@ -126,7 +126,7 @@ done
 
 ## Set the data to show in the nagios service status
 for (( i=1; i<=$EQP_FS; i++ )); do
-  DATA[$i]="${FSNAME[$i]} ${PERCENT[$i]}% of ${FULL[$i]},"
+  DATA[$i]="${FSNAME[$i]} ${PERCENT[$i]}% used of ${FULL[$i]} total - ${FREE[$i]} free,"
   perf[$i]="${FSNAME[$i]}=${PERCENT[$i]}%;${WARN};${CRIT};0;;"
 done
 
